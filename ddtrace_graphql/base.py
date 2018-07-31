@@ -106,11 +106,12 @@ def traced_graphql_wrapped(
 
 def traced_graphql(
     *args,
-    span_kwargs=None,
-    span_callback=None,
-    ignore_exceptions=(),
     **kwargs
 ):
+    span_kwargs = kwargs.get('span_kwargs', None)
+    span_callback = kwargs.get('span_callback', None)
+    ignore_exceptions = kwargs.get('ignore_exceptions', ())
+
     return traced_graphql_wrapped(
         _graphql, args, kwargs,
         span_kwargs=span_kwargs,

@@ -1,7 +1,7 @@
 import json
 import re
 import traceback
-from io import StringIO
+from six import StringIO
 
 from graphql.error import GraphQLError, format_error
 from graphql.language.ast import Document
@@ -80,6 +80,14 @@ def format_error_traceback(error, limit=20):
     Returns ``limit`` lines of ``error``s exception traceback.
     """
     buffer_file = StringIO()
+
+    # Python 2 compat
+    if not hasattr(error, '__traceback__'):
+        if hasattr(error, 'stack'):
+            error.__traceback__ = error.stack
+        else:
+            error.__traceback__ = None
+
     traceback.print_exception(
         type(error),
         error,

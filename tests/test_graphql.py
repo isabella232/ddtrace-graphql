@@ -2,6 +2,7 @@ import json
 import os
 
 import graphql
+import sys
 from ddtrace.encoding import JSONEncoder, MsgpackEncoder
 from ddtrace.ext import errors as ddtrace_errors
 from ddtrace.tracer import Tracer
@@ -166,6 +167,8 @@ class TestGraphQL:
             raise Exception('Testing stuff')
         except Exception as exc:
             _error = exc
+            if not hasattr(exc, '__traceback__'):
+                _error.stack = sys.exc_info()[2]
 
         def _tg(*args, **kwargs):
             def func(*args, **kwargs):
